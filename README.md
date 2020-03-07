@@ -62,7 +62,7 @@ func main() {
 	// set or update
 	// pgsql.Set(sql, arg1, arg2 ...) 
 	sql = `UPDATE table SET num = 0`
-	if err := pgsql.Set(sql).Item(&id, &val); err != nil {
+	if err := pgsql.Set(sql); err != nil {
 		panic(err)
 	}
 
