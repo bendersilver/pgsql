@@ -9,12 +9,33 @@ import (
 	"github.com/bendersilver/blog"
 	"github.com/jackc/pgx"
 	"github.com/jackc/pgx/pgxpool"
+	"github.com/joho/godotenv"
 )
 
 var dbURL string
 
-// Init -
-func Init() {
+func init() {
+	var err error
+	switch len(os.Args) {
+	case 2:
+		err = godotenv.Load(os.Args[1])
+	default:
+		err = godotenv.Load()
+	}
+	if err != nil {
+		panic(err)
+	}
+	for _, v := range []string{
+		"PG_USER",
+		"PG_PASS",
+		"PG_HOST",
+		"PG_PORT",
+		"PG_DB",
+	} {
+		if _, ok := os.LookupEnv(v); !ok {
+			panic(fmt.Errorf("not exists %s", v))
+		}
+	}
 	dbURL = fmt.Sprintf("postgresql://%s:%s@%s:%s/%s",
 		os.Getenv("PG_USER"),
 		os.Getenv("PG_PASS"),
